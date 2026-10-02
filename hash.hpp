@@ -1,10 +1,14 @@
 #pragma once
+#include <iomanip>
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <cstdint>
 #include <iostream>
 #include <array>
 #include <vector>
 #include <chrono>
+#include <random>
 
 //hashing based on golden ratio (using phi)
 
@@ -75,4 +79,63 @@ std::vector<uint8_t> pad(const std::string& data) {
 //rotation for mix_block()
 void rotate() {
 	
+}
+
+//test functions
+
+std::string to_hex(const std::array<uint32_t, state_wcount>& state) {
+	std::ostringstream oss;
+	oss << std::hex << std::nouppercase << std::setfill('0');
+	for (uint32_t w : state) {
+		oss << std::setw(8) << w;
+	}
+	return oss.str();
+}
+//test functions
+
+//rand ASCII letters
+std::string random_text(size_t length) {
+	std::string text;
+	text.reserve(length);
+	for (size_t i = 0; i < length; ++i) {
+		int c = 33 + (rand() % (126 - 33 + 1));  //33-126
+		text += static_cast<char>(c);
+	}
+	return text;
+}
+
+//measure once
+void measure_hash(const std::string& input) {
+	std::cout << input.size() << " simboliu:\n";
+
+	auto start = std::chrono::steady_clock::now();
+	auto result = hash_block(input);
+	auto end = std::chrono::steady_clock::now();
+
+	double seconds = std::chrono::duration<double>(end - start).count();
+
+	std::cout << "hash: " << to_hex(result) << "\n";
+	std::cout << "laikas: " << std::fixed << std::setprecision(3) << seconds << " s\n\n";
+}
+
+void benchmark_hash_v1() {
+	srand(25);
+
+	std::string input_1m = random_text(1000000);
+	std::string input_10m = random_text(10000000);
+	std::string input_100m = random_text(100000000);
+
+	std::cout << "po paspaudimo testuosite 1mln. simboliu\n";
+	system("pause"); std::cout << "\n";
+	measure_hash(input_1m);
+
+	std::cout << "po paspaudimo testuosite 10mln. simboliu\n";
+	system("pause"); std::cout << "\n";
+	measure_hash(input_10m);
+
+	std::cout << "po paspaudimo testuosite 100mln. simboliu\n";
+	system("pause"); std::cout << "\n";
+	measure_hash(input_100m);
+
+	system("pause");
 }
