@@ -1,9 +1,10 @@
 // V0.1:
-
-/// 
-/// 
-/// 
-/// 
+// Uzduoties reikalavimu igyvendinimas aprasytas README.md.
+// Kai kurie dalykai parasyti komentaruose, bet tai ne visi.
+// README.md yra visa informacija, kurios gali reiketi versijai 1.0.
+// Viska galima patikrinti kode, nors nebutinai visoms reikmems yra sudarytos funkcijos.
+// V0.1 release buvo sukurtas ir isleistas 2-10-2026, 8 dienas po sutartos datos.
+// - Aistis Verikas
 
 #include "hash.hpp"
 
@@ -90,6 +91,9 @@ int main()
 		}
 		else if (hash1 == hashB) {
 			std::cout << "hash a ir hash b sutampa";
+		}
+		else {
+			std::cout << "something went wrong";
 		}
 	}
 	//choice for v1.0 hash function effectiveness benchmark

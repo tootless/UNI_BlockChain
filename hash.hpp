@@ -20,7 +20,7 @@ constexpr std::array<uint32_t, state_wcount> state_words = { //phi / (prime star
 constexpr size_t block_size = 32; //iteration input size
 constexpr uint32_t value = 2654435769u; // 2^32/phi, rounded to uneven number cause thats better
 
-//
+//32 byte block into state with two words so there is more interaction
 void mix_block(std::array<uint32_t, state_wcount>& state, const std::vector<uint8_t>& block) {
 	size_t i = 0;
 	for (unsigned char c : block) {
@@ -38,7 +38,6 @@ void mix_block(std::array<uint32_t, state_wcount>& state, const std::vector<uint
 //begins with a vector of input data, can be any length
 //adds a length marker,
 //adds zeros until 8 last bytes are left,
-// ...
 //returns 32 bytes of data, padded to a number that is divisible by block_size
 std::vector <uint8_t> pad(const std::vector<uint8_t>& data) {
 	uint64_t byte_len = static_cast<uint64_t>(data.size());
@@ -54,7 +53,7 @@ std::vector <uint8_t> pad(const std::vector<uint8_t>& data) {
 	return padded;
 }
 
-// hashed result function for bytes
+//hashed result function for bytes
 std::array<uint32_t, state_wcount> hash_block(const std::vector<uint8_t>& data) {
 	std::array<uint32_t, state_wcount> state = state_words;
 	std::vector<uint8_t> padded = pad(data);
@@ -67,21 +66,12 @@ std::array<uint32_t, state_wcount> hash_block(const std::vector<uint8_t>& data) 
 	return state;
 }
 
-//hashed result func for text input
-std::array<uint32_t, state_wcount> hash_block(const std::string& text) {
-	return hash_block(std::vector<uint8_t>(text.begin(), text.end()));
-}
-//padding func for text input
-std::vector<uint8_t> pad(const std::string& data) {
-	return pad(std::vector<uint8_t>(data.begin(), data.end()));
-}
-
-//rotation for mix_block()
+//rotation for mix_block() eventually
 void rotate() {
 	
 }
 
-//test functions
+//HELP functions
 
 std::string to_hex(const std::array<uint32_t, state_wcount>& state) {
 	std::ostringstream oss;
@@ -91,7 +81,17 @@ std::string to_hex(const std::array<uint32_t, state_wcount>& state) {
 	}
 	return oss.str();
 }
-//test functions
+
+//hashed result func for text input
+std::array<uint32_t, state_wcount> hash_block(const std::string& text) {
+	return hash_block(std::vector<uint8_t>(text.begin(), text.end()));
+}
+//padding func for text input
+std::vector<uint8_t> pad(const std::string& data) {
+	return pad(std::vector<uint8_t>(data.begin(), data.end()));
+}
+
+//TESTING functions
 
 //rand ASCII letters
 std::string random_text(size_t length) {
