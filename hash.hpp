@@ -67,6 +67,25 @@ std::array<uint32_t, state_wcount> hash_block(const std::vector<uint8_t>& data) 
 	return state;
 }
 
+//with salt
+std::array<uint32_t, state_wcount> hash_block_salted(const std::string& data, const std::string& salt) {
+	std::string salted_data = salt + data;
+	return hash_block(salted_data);
+}
+
+std::string salt(size_t num_bytes) {
+	std::random_device rd;
+	std::mt19937 gen(rd()); //seeded
+	std::uniform_int_distribution<int> dist(0, 255);
+
+	std::ostringstream oss;
+	for (size_t i = 0; i < num_bytes; ++i) {
+		uint8_t byte = static_cast<uint8_t>(dist(gen));
+		oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(byte);
+	}
+	return oss.str();
+}
+
 uint32_t rotate(uint32_t state, unsigned value) {
 	return (state << value) | (state >> 32u - value);
 }
