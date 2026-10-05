@@ -1,14 +1,13 @@
 // V1.1:
-// Pridetos rotacijos
-//
-//
+// Prideta bitu rotacija
+// Prideta druska
 #include "hash.hpp"
 
 int main()
 {
 	std::string path, menu;
 
-	std::cout << "1 - failo ivestis;\n2 - rankine ivestis\n3 - testai\n4 - efektyvumas v1.0\n5 - rankine ivestis su druska\n"; 
+	std::cout << "1 - failo ivestis;\n2 - rankine ivestis\n3 - testai\n4 - rankine ivestis su druska\n5 - efektyvumas v1.1"; 
 	getline(std::cin, menu);
 
 	//choice for FILE INPUT
@@ -91,14 +90,8 @@ int main()
 			std::cout << "something went wrong";
 		}
 	}
-	//choice for v1.0 hash function effectiveness benchmark
-	if (menu == "4") {
-		std::cout << "\nefektyvumas su 1mln., 10mln., 100mln. random simboliu (visi su tokiu pat seed) ivestimis:\n";
-
-		benchmark_hash_v1();
-	}
 	//choice for MANUAL INPUT WITH SALT
-	if (menu == "5") {
+	if (menu == "4") {
 		std::cout << "\nrankine ivestis su druska\n";
 		std::cout << "ivesk teksta: ";
 
@@ -117,7 +110,12 @@ int main()
 		auto result1 = hash_block(line);
 		std::cout << "be druskos rezultatas: \n---\n" << to_hex(result1) << "\n---\n";
 	}
+	//choice for v1.1 hash function effectiveness benchmark
+	if (menu == "5") {
+		std::cout << "\nefektyvumas su 1mln., 10mln., 100mln. random simboliu (visi su tokiu pat seed) ivestimis:\n";
 
+		benchmark_hash_v1_1();
+	}
 
 	return 0;
 }

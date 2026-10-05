@@ -122,37 +122,40 @@ std::string random_text(size_t length) {
 }
 
 //measure once
-void measure_hash(const std::string& input) {
+void measure_hash(const std::string& input, const std::string& salt_value) {
 	std::cout << input.size() << " simboliu:\n";
 
 	auto start = std::chrono::steady_clock::now();
-	auto result = hash_block(input);
+	auto result = hash_block_salted(input, salt_value);
 	auto end = std::chrono::steady_clock::now();
 
 	double seconds = std::chrono::duration<double>(end - start).count();
 
 	std::cout << "hash: " << to_hex(result) << "\n";
+	std::cout << "salt: " << salt_value << "\n";
 	std::cout << "laikas: " << std::fixed << std::setprecision(3) << seconds << " s\n\n";
 }
 
-void benchmark_hash_v1() {
-	srand(25);
+void benchmark_hash_v1_1() {
+	srand(25); //seed for random text
 
 	std::string input_1m = random_text(1000000);
 	std::string input_10m = random_text(10000000);
 	std::string input_100m = random_text(100000000);
 
+	std::string generated_salt = salt(32);
+
 	std::cout << "po paspaudimo testuosite 1mln. simboliu\n";
 	system("pause"); std::cout << "\n";
-	measure_hash(input_1m);
+	measure_hash(input_1m, generated_salt);
 
 	std::cout << "po paspaudimo testuosite 10mln. simboliu\n";
 	system("pause"); std::cout << "\n";
-	measure_hash(input_10m);
+	measure_hash(input_10m, generated_salt);
 
 	std::cout << "po paspaudimo testuosite 100mln. simboliu\n";
 	system("pause"); std::cout << "\n";
-	measure_hash(input_100m);
+	measure_hash(input_100m, generated_salt);
 
 	system("pause");
 }
