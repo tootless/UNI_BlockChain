@@ -28,6 +28,7 @@ void mix_block(std::array<uint32_t, state_wcount>& state, const std::vector<uint
 		size_t secondw = (i + 3) % state_wcount;
 		state[firstw] += c;
 		state[firstw] *= value;
+		state[firstw] = rotate(state[firstw], 15);
 
 		state[secondw] ^= state[firstw];
 		++i;
@@ -66,9 +67,8 @@ std::array<uint32_t, state_wcount> hash_block(const std::vector<uint8_t>& data) 
 	return state;
 }
 
-//rotation for mix_block() eventually
-void rotate() {
-	
+uint32_t rotate(uint32_t state, unsigned value) {
+	return (state << value) | (state >> 32u - value);
 }
 
 //HELP functions
