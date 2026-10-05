@@ -8,7 +8,7 @@ int main()
 {
 	std::string path, menu;
 
-	std::cout << "1 - failo ivestis;\n2 - rankine ivestis\n3 - testai\n4 - efektyvumas v1.0\n"; 
+	std::cout << "1 - failo ivestis;\n2 - rankine ivestis\n3 - testai\n4 - efektyvumas v1.0\n5 - rankine ivestis su druska\n"; 
 	getline(std::cin, menu);
 
 	//choice for FILE INPUT
@@ -37,7 +37,6 @@ int main()
 	//choice for MANUAL INPUT
 	if (menu == "2") {
 		std::cout << "\nrankine ivestis\n";
-		std::cout << "(\"ENTER\" nera itrauktas i maisuojamus baitus\n";
 		std::cout << "ivesk teksta: ";
 
 		std::string line;
@@ -98,5 +97,27 @@ int main()
 
 		benchmark_hash_v1();
 	}
+	//choice for MANUAL INPUT WITH SALT
+	if (menu == "5") {
+		std::cout << "\nrankine ivestis su druska\n";
+		std::cout << "ivesk teksta: ";
+
+		std::string line;
+		if (!std::getline(std::cin, line)) {
+			std::cerr << "KLAIDA: nepavyko nuskaityti ivesties.\n";
+			return 1;
+		}
+
+		std::string generated_salt = salt(32); //64 char salt
+		auto result = hash_block_salted(line, generated_salt);
+
+		std::cout << "druska:    " << generated_salt << "\n";
+		std::cout << "rezultatas: \n---\n" << to_hex(result) << "\n---\n";
+
+		auto result1 = hash_block(line);
+		std::cout << "be druskos rezultatas: \n---\n" << to_hex(result1) << "\n---\n";
+	}
+
+
 	return 0;
 }

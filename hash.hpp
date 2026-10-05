@@ -20,6 +20,10 @@ constexpr std::array<uint32_t, state_wcount> state_words = { //phi / (prime star
 constexpr size_t block_size = 32; //iteration input size
 constexpr uint32_t value = 2654435769u; // 2^32/phi, rounded to uneven number cause thats better
 
+uint32_t rotate(uint32_t state, unsigned value) {
+	return (state << value) | (state >> (32u - value));
+}
+
 //32 byte block into state with two words so there is more interaction
 void mix_block(std::array<uint32_t, state_wcount>& state, const std::vector<uint8_t>& block) {
 	size_t i = 0;
@@ -67,31 +71,6 @@ std::array<uint32_t, state_wcount> hash_block(const std::vector<uint8_t>& data) 
 	return state;
 }
 
-//with salt
-std::array<uint32_t, state_wcount> hash_block_salted(const std::string& data, const std::string& salt) {
-	std::string salted_data = salt + data;
-	return hash_block(salted_data);
-}
-
-std::string salt(size_t num_bytes) {
-	std::random_device rd;
-	std::mt19937 gen(rd()); //seeded
-	std::uniform_int_distribution<int> dist(0, 255);
-
-	std::ostringstream oss;
-	for (size_t i = 0; i < num_bytes; ++i) {
-		uint8_t byte = static_cast<uint8_t>(dist(gen));
-		oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(byte);
-	}
-	return oss.str();
-}
-
-uint32_t rotate(uint32_t state, unsigned value) {
-	return (state << value) | (state >> 32u - value);
-}
-
-//HELP functions
-
 std::string to_hex(const std::array<uint32_t, state_wcount>& state) {
 	std::ostringstream oss;
 	oss << std::hex << std::nouppercase << std::setfill('0');
@@ -108,6 +87,25 @@ std::array<uint32_t, state_wcount> hash_block(const std::string& text) {
 //padding func for text input
 std::vector<uint8_t> pad(const std::string& data) {
 	return pad(std::vector<uint8_t>(data.begin(), data.end()));
+}
+
+//with salt - only string
+std::array<uint32_t, state_wcount> hash_block_salted(const std::string& data, const std::string& salt) {
+	std::string salted_data = salt + data;
+	return hash_block(salted_data);
+}
+
+std::string salt(size_t num_bytes) {
+	std::random_device rd;
+	std::mt19937 gen(rd()); //seeded
+	std::uniform_int_distribution<int> dist(0, 255);
+
+	std::ostringstream oss;
+	for (size_t i = 0; i < num_bytes; ++i) {
+		uint8_t byte = static_cast<uint8_t>(dist(gen));
+		oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(byte);
+	}
+	return oss.str();
 }
 
 //TESTING functions
