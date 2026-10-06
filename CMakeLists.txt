@@ -4,7 +4,8 @@ project(hashFunction)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(hash_f
-    main.cpp
-    "hash.hpp"
- )
+# pagrindine hash programa su ivestimi/failais
+add_executable(hash_f main.cpp)
+
+# eksperimentai
+add_executable(experiments experiments/main.cpp experiments/1/experiment1.cpp)

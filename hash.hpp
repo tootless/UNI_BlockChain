@@ -20,12 +20,12 @@ constexpr std::array<uint32_t, state_wcount> state_words = { //phi / (prime star
 constexpr size_t block_size = 32; //iteration input size
 constexpr uint32_t value = 2654435769u; // 2^32/phi, rounded to uneven number cause thats better
 
-uint32_t rotate(uint32_t state, unsigned value) {
+inline uint32_t rotate(uint32_t state, unsigned value) {
 	return (state << value) | (state >> (32u - value));
 }
 
 //32 byte block into state with two words so there is more interaction
-void mix_block(std::array<uint32_t, state_wcount>& state, const std::vector<uint8_t>& block) {
+inline void mix_block(std::array<uint32_t, state_wcount>& state, const std::vector<uint8_t>& block) {
 	size_t i = 0;
 	for (unsigned char c : block) {
 		size_t firstw = i % state_wcount;
@@ -44,7 +44,7 @@ void mix_block(std::array<uint32_t, state_wcount>& state, const std::vector<uint
 //adds a length marker,
 //adds zeros until 8 last bytes are left,
 //returns 32 bytes of data, padded to a number that is divisible by block_size
-std::vector <uint8_t> pad(const std::vector<uint8_t>& data) {
+inline std::vector <uint8_t> pad(const std::vector<uint8_t>& data) {
 	uint64_t byte_len = static_cast<uint64_t>(data.size());
 	std::vector<uint8_t> padded(data.begin(),data.end());
 	padded.push_back(0b10000000); //length marker
@@ -59,7 +59,7 @@ std::vector <uint8_t> pad(const std::vector<uint8_t>& data) {
 }
 
 //hashed result function for bytes
-std::array<uint32_t, state_wcount> hash_block(const std::vector<uint8_t>& data) {
+inline std::array<uint32_t, state_wcount> hash_block(const std::vector<uint8_t>& data) {
 	std::array<uint32_t, state_wcount> state = state_words;
 	std::vector<uint8_t> padded = pad(data);
 
@@ -71,7 +71,7 @@ std::array<uint32_t, state_wcount> hash_block(const std::vector<uint8_t>& data) 
 	return state;
 }
 
-std::string to_hex(const std::array<uint32_t, state_wcount>& state) {
+inline std::string to_hex(const std::array<uint32_t, state_wcount>& state) {
 	std::ostringstream oss;
 	oss << std::hex << std::nouppercase << std::setfill('0');
 	for (uint32_t w : state) {
@@ -81,21 +81,21 @@ std::string to_hex(const std::array<uint32_t, state_wcount>& state) {
 }
 
 //hashed result func for text input
-std::array<uint32_t, state_wcount> hash_block(const std::string& text) {
+inline std::array<uint32_t, state_wcount> hash_block(const std::string& text) {
 	return hash_block(std::vector<uint8_t>(text.begin(), text.end()));
 }
 //padding func for text input
-std::vector<uint8_t> pad(const std::string& data) {
+inline std::vector<uint8_t> pad(const std::string& data) {
 	return pad(std::vector<uint8_t>(data.begin(), data.end()));
 }
 
 //with salt - only string
-std::array<uint32_t, state_wcount> hash_block_salted(const std::string& data, const std::string& salt) {
+inline std::array<uint32_t, state_wcount> hash_block_salted(const std::string& data, const std::string& salt) {
 	std::string salted_data = salt + data;
 	return hash_block(salted_data);
 }
 
-std::string salt(size_t num_bytes) {
+inline std::string salt(size_t num_bytes) {
 	std::random_device rd;
 	std::mt19937 gen(rd()); //seeded
 	std::uniform_int_distribution<int> dist(0, 255);
@@ -111,7 +111,7 @@ std::string salt(size_t num_bytes) {
 //TESTING functions
 
 //rand ASCII letters
-std::string random_text(size_t length) {
+inline std::string random_text(size_t length) {
 	std::string text;
 	text.reserve(length);
 	for (size_t i = 0; i < length; ++i) {
@@ -122,7 +122,7 @@ std::string random_text(size_t length) {
 }
 
 //measure once
-void measure_hash(const std::string& input, const std::string& salt_value) {
+inline void measure_hash(const std::string& input, const std::string& salt_value) {
 	std::cout << input.size() << " simboliu:\n";
 
 	auto start = std::chrono::steady_clock::now();
@@ -136,7 +136,7 @@ void measure_hash(const std::string& input, const std::string& salt_value) {
 	std::cout << "laikas: " << std::fixed << std::setprecision(3) << seconds << " s\n\n";
 }
 
-void benchmark_hash_v1_1() {
+inline void benchmark_hash_v1_1() {
 	srand(25); //seed for random text
 
 	std::string input_1m = random_text(1000000);
