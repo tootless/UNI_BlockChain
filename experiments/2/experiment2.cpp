@@ -1,3 +1,6 @@
+//2 eksperimentas: hex formato validavimas bei rankines/failo ivesties tarpusavio patikrinimas
+//
+
 #include "experiment2.hpp"
 #include "hash.hpp"
 #include <iostream>
@@ -24,30 +27,6 @@ bool check_hex(const std::string& hex, const size_t len) {
 	}
 
 	return true;
-}
-
-//reads from input/ in build files
-std::vector<uint8_t> read_data(const std::string& filename){
-	std::string path = "inputs/" + filename;
-	std::ifstream f(path, std::ios::binary); //ios::binary, tik baitai skaitomi
-	if (!f) {
-		std::cerr << "KLAIDA: nepavyko atidaryti failo " << path << "\n";
-	}
-	//file data into iterator
-	std::vector<uint8_t> data((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
-
-	if (f.bad()) {
-		std::cerr << "KLAIDA: nepavyko nuskaityti failo " << path << "\n";
-	}
-	f.close();
-	return data;
-}
-
-void write_data(const std::string& filename,std::string& input) {
-	std::string path = "inputs/" + filename;
-	std::ofstream of(path, std::ios::binary);
-	of << input;
-	of.close();
 }
 
 //pilna patikra

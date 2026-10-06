@@ -1,24 +1,47 @@
 #include "1/experiment1.hpp"
 #include "2/experiment2.hpp"
+#include "3/experiment3.hpp"
 #include <iostream>
 #include <string>
 
+void run_all_experiments() {
+	run_experiment1();
+	system("pause");
+	system("cls");
+
+	run_experiment2();
+	system("pause");
+	system("cls");
+
+	run_experiment3();
+	system("pause");
+	std::cout << "\n\neksperimentai baigti\n\n";
+}
+
 int main() {
-	std::string input;
-	std::cout << "iveskite nuo 1 - 7 atitinkamam eksperimentui atlikti";
+	std::string input = "";
+	std::cout << "iveskite nuo 1 - 7 atitinkamam eksperimentui atlikti, 0 - iseiti, 100 - run all experiments\n";
 	std::getline(std::cin, input);
 	int choice = std::stoi(input);
-
 	switch (choice)
 	{
+	case(0):
+		std::cout << "bye";
+		return 0;
+	case(100):
+		run_all_experiments();
+		break;
 	case(1):
 		run_experiment1();
 		break;
 	case(2):
 		run_experiment2();
 		break;
+	case(3):
+		run_experiment3();
+		break;
 	default:
-		std::cout << "tik nuo 1-7\n";
+		std::cout << "iveskite nuo 1 - 7 atitinkamam eksperimentui atlikti, 0 - iseiti, 100 - run all experiments\n";
 		break;
 	}
 	return 0;

@@ -108,7 +108,7 @@ inline std::string salt(size_t num_bytes) {
 	return oss.str();
 }
 
-//TESTING functions
+//help/other functions
 
 //rand ASCII letters
 inline std::string random_text(size_t length) {
@@ -119,6 +119,30 @@ inline std::string random_text(size_t length) {
 		text += static_cast<char>(c);
 	}
 	return text;
+}
+
+//reads from input/ in build files
+inline std::vector<uint8_t> read_data(const std::string& filename) {
+	std::string path = "inputs/" + filename;
+	std::ifstream f(path, std::ios::binary); //ios::binary, tik baitai skaitomi
+	if (!f) {
+		std::cerr << "KLAIDA: nepavyko atidaryti failo " << path << "\n";
+	}
+	//file data into iterator
+	std::vector<uint8_t> data((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+
+	if (f.bad()) {
+		std::cerr << "KLAIDA: nepavyko nuskaityti failo " << path << "\n";
+	}
+	f.close();
+	return data;
+}
+//creates a file with input data (string)
+inline void write_data(const std::string& filename, std::string& input) {
+	std::string path = "inputs/" + filename;
+	std::ofstream of(path, std::ios::binary);
+	of << input;
+	of.close();
 }
 
 //measure once
